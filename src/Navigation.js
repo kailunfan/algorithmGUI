@@ -1,18 +1,17 @@
-import { Menu, Layout } from "antd";
 import "antd/dist/antd.css";
 import React from "react";
+import { Menu, Layout } from "antd";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import { EditableTable } from "./Table";
-import { CollapseTest } from "./Collapse";
-import { Game } from "./Game";
+import * as Pages from "./Pages";
+
 const { Header, Content } = Layout;
 
-export class Navibar extends React.Component {
+export class Navigation extends React.Component {
   state = {
     current: "game"
   };
 
-  cmps = [Game, CollapseTest, EditableTable];
+  cmps = Object.values(Pages);
 
   handleClick = e => {
     this.setState({
@@ -29,6 +28,7 @@ export class Navibar extends React.Component {
         </Menu.Item>
       );
     });
+    
     const routes = this.cmps.map(cmp => {
       const name = cmp.name.toLowerCase();
       return <Route path={`/${name}`} component={cmp}></Route>;
@@ -37,12 +37,12 @@ export class Navibar extends React.Component {
     return (
       <Layout>
         <Router>
-          <Header style={{"background":"#fff"}}>
+          <Header style={{ background: "#fff" }}>
             <Menu
               onClick={this.handleClick}
               selectedKeys={[this.state.current]}
               mode="horizontal"
-              style={{ lineHeight: '64px' }}
+              style={{ lineHeight: "64px" }}
             >
               {menuItems}
             </Menu>
