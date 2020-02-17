@@ -1,3 +1,6 @@
-export * from './Game'
-export * from './Table'
-export * from './Collapse'
+export { EightQueens } from "./EightQueens";
+export { BubbleSort } from "./BubbleSort";
+export { SelectSort } from "./SelectSort";
+export { InsertSort } from "./InsertSort";
+export { QuickSort } from "./QuickSort";
+export { MergeList } from "./MergeList";

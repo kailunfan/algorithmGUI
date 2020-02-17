@@ -48,3 +48,18 @@ ol, ul {
 .game-info {
   margin-left: 20px;
 }
+
+.game-board{
+  float: left;
+  margin: 50px;
+  margin-top:20px;
+}
+s
+.result-list{
+  height: 300px;
+  overflow: auto;
+}
+.button-group{
+  margin: 20px;
+  margin-left: 0px;
+}

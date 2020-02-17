@@ -8,7 +8,7 @@ const { Header, Content } = Layout;
 
 export class Navigation extends React.Component {
   state = {
-    current: "game"
+    current: "eightqueens"
   };
 
   cmps = Object.values(Pages);
