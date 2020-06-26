@@ -1,61 +1,12 @@
-import React from "react";
-import { Button } from "antd";
+import React, { Fragment } from "react";
+import { Base } from './Base';
 
-class Board extends React.Component {
-  renderSquare(i) {
-    return <button className="square">{i}</button>;
-  }
-
-  renderCur() {
-    const lc = this.props.lc;
-    const rc = this.props.rc;
-    const shell = Array(this.props.result.length).fill("");
-    if (lc >= 0) {
-      shell[lc] = "↑";
-    }
-    if (rc >= 0) {
-      shell[rc] = "↑";
-    }
-    if(lc >= 0 && lc === rc){
-      shell[lc] = '⇈'
-    }
-    return (
-      <div className="board-row">{shell.map(x => this.renderSquare(x))}</div>
-    );
-  }
-
-  renderPivot() {
-    const shell = Array(this.props.result.length).fill("");
-    const pivot = this.props.pivotIndex;
-    if (pivot >= 0) {
-      shell[pivot] = "★";
-    }
-    return (
-      <div className="board-row">{shell.map(x => this.renderSquare(x))}</div>
-    );
-  }
-
-  render() {
-    return (
-      <div>
-        <div className="board-row">
-          {this.props.result.map(x => this.renderSquare(x))}
-        </div>
-        {this.renderCur()}
-        {this.renderPivot()}
-      </div>
-    );
-  }
-}
-
-export class QuickSort extends React.Component {
+export class QuickSort extends Base {
   constructor(props) {
     super(props);
-    this.nextStepFunc = () => {};
-    this.nextStepPromise = undefined;
-    this.result = [5, 4, 3, 1, 9, 8, 0, 6, 2, 7];
+    this.list = [5, 4, 3, 1, 9, 8, 0, 6, 2, 7];
     this.state = {
-      result: this.result,
+      list: this.list,
       cur: [-1, -1],
       pivotIndex: -1,
       lc: -1,
@@ -63,81 +14,66 @@ export class QuickSort extends React.Component {
     };
   }
 
-  nextStepPromiseFactory() {
-    return new Promise(resolve => (this.nextStepFunc = () => resolve()));
-  }
-
-  async quickSort(li, startIndex, endIndex) {
+  async quickSort(list, startIndex, endIndex) {
     if (startIndex === undefined) {
       startIndex = 0;
     }
     if (endIndex === undefined) {
-      endIndex = li.length - 1;
+      endIndex = list.length - 1;
     }
     if (startIndex >= endIndex) {
       return;
     }
-    await this.nextStepPromiseFactory();
-    let pivot = li[startIndex];
+    await this.stop();
+    let pivot = list[startIndex];
     let lc = startIndex;
     let rc = endIndex;
     this.setState({ lc, rc, pivotIndex: startIndex });
-    this.setState({});
     while (lc < rc) {
-      while (lc < rc && li[rc] >= pivot) {
-        await this.nextStepPromiseFactory();
+      while (lc < rc && list[rc] >= pivot) {
         rc--;
-        this.setState({ rc });
+        await this.stop({ rc });
       }
-      while (lc < rc && li[lc] <= pivot) {
-        await this.nextStepPromiseFactory();
+      while (lc < rc && list[lc] <= pivot) {
         lc++;
-        this.setState({ lc });
+        await this.stop({ lc });
       }
       if (lc < rc) {
-        await this.nextStepPromiseFactory();
-        [li[lc], li[rc]] = [li[rc], li[lc]];
-        this.setState({ result: li });
+        [list[lc], list[rc]] = [list[rc], list[lc]];
+        await this.stop({ list });
       }
     }
-    await this.nextStepPromiseFactory();
-    [li[startIndex], li[lc]] = [li[lc], li[startIndex]];
-    this.setState({ result: li });
-    await this.quickSort(li, startIndex, lc - 1);
-    await this.quickSort(li, lc + 1, endIndex);
+    [list[startIndex], list[lc]] = [list[lc], list[startIndex]];
+    await this.stop({ list });
+    await this.quickSort(list, startIndex, lc - 1);
+    await this.quickSort(list, lc + 1, endIndex);
   }
 
   async start() {
-    this.quickSort(this.result);
+    this.quickSort(this.list);
   }
 
-  nextStep() {
-    this.nextStepFunc();
-  }
-
-  componentDidMount() {
-    this.start();
-  }
-
-  render() {
-    return (
-      <div>
-        <Button.Group className="button-group">
-          <Button type="primary" onClick={e => this.nextStep(e)}>
-            Next
-          </Button>
-        </Button.Group>
-        <div className="game-board">
-          <Board
-            result={this.state.result}
-            lc={this.state.lc}
-            rc={this.state.rc}
-            pivotIndex={this.state.pivotIndex}
-          />
-        </div>
-
-        <div className="result-list"></div>
-      </div>
-    );
+  renderPointer() {
+    const lc = this.state.lc;
+    const rc = this.state.rc;
+    const shell = Array(this.list.length).fill("");
+    if (lc >= 0) {
+      shell[lc] = "↑";
+    }
+    if (rc >= 0) {
+      shell[rc] = "↑";
+    }
+    if (lc >= 0 && lc === rc) {
+      shell[lc] = '⇈'
+    }
+    const shell1 = Array(this.list.length).fill("");
+    const pivot = this.state.pivotIndex;
+    if (pivot >= 0) {
+      shell1[pivot] = "★";
+    }
+    return <Fragment>
+      {this.renderPointerRow(shell)}
+      {this.renderPointerRow(shell1)}
+    </Fragment>
   }
 }

@@ -11,7 +11,16 @@ export class Navigation extends React.Component {
     current: "eightqueens"
   };
 
-  cmps = Object.values(Pages);
+  // cmps = Object.values(Pages);
+  cmps = [
+    { name: "EightQueens", value: Pages.EightQueens },
+    { name: "BubbleSort", value: Pages.BubbleSort },
+    { name: "SelectSort", value: Pages.SelectSort },
+    { name: "InsertSort", value: Pages.InsertSort },
+    { name: "QuickSort", value: Pages.QuickSort },
+    { name: "MergeSortedList", value: Pages.MergeSortedList },
+    { name: "Insort", value: Pages.Insort }
+  ];
 
   handleClick = e => {
     this.setState({
@@ -28,10 +37,10 @@ export class Navigation extends React.Component {
         </Menu.Item>
       );
     });
-    
+
     const routes = this.cmps.map(cmp => {
       const name = cmp.name.toLowerCase();
-      return <Route path={`/${name}`} component={cmp}></Route>;
+      return <Route path={`/${name}`} component={cmp.value}></Route>;
     });
 
     return (

@@ -3,4 +3,5 @@ export { BubbleSort } from "./BubbleSort";
 export { SelectSort } from "./SelectSort";
 export { InsertSort } from "./InsertSort";
 export { QuickSort } from "./QuickSort";
-export { MergeList } from "./MergeList";
+export { MergeSortedList } from "./MergeSortedList";
+export { Insort } from "./Insort";
