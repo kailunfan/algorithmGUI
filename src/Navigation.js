@@ -8,7 +8,7 @@ const { Header, Content } = Layout;
 
 export class Navigation extends React.Component {
   state = {
-    current: "eightqueens"
+    current: "eightqueens",
   };
 
   // cmps = Object.values(Pages);
@@ -19,17 +19,18 @@ export class Navigation extends React.Component {
     { name: "InsertSort", value: Pages.InsertSort },
     { name: "QuickSort", value: Pages.QuickSort },
     { name: "MergeSortedList", value: Pages.MergeSortedList },
-    { name: "Insort", value: Pages.Insort }
+    { name: "Insort", value: Pages.Insort },
+    { name: "LinkReverse", value: Pages.LinkReverse },
   ];
 
-  handleClick = e => {
+  handleClick = (e) => {
     this.setState({
-      current: e.key
+      current: e.key,
     });
   };
 
   render() {
-    const menuItems = this.cmps.map(cmp => {
+    const menuItems = this.cmps.map((cmp) => {
       const name = cmp.name.toLowerCase();
       return (
         <Menu.Item key={name}>
@@ -38,9 +39,9 @@ export class Navigation extends React.Component {
       );
     });
 
-    const routes = this.cmps.map(cmp => {
+    const routes = this.cmps.map((cmp) => {
       const name = cmp.name.toLowerCase();
-      return <Route path={`/${name}`} component={cmp.value}></Route>;
+      return <Route key={name} path={`/${name}`} component={cmp.value}></Route>;
     });
 
     return (

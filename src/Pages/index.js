@@ -5,3 +5,4 @@ export { InsertSort } from "./InsertSort";
 export { QuickSort } from "./QuickSort";
 export { MergeSortedList } from "./MergeSortedList";
 export { Insort } from "./Insort";
+export { LinkReverse } from "./LinkReverse/index.js";

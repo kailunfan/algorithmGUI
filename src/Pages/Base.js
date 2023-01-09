@@ -1,16 +1,15 @@
 import React from "react";
 import { Button } from "antd";
 
-
 export class Base extends React.Component {
   constructor(props) {
     super(props);
-    this.nextStepFunc = () => { };
-    this.list = []
+    this.nextStepFunc = () => {};
+    this.list = [];
   }
 
   nextStepPromiseFactory() {
-    return new Promise(resolve => (this.nextStepFunc = () => resolve()));
+    return new Promise((resolve) => (this.nextStepFunc = () => resolve()));
   }
 
   async stop(state) {
@@ -18,7 +17,7 @@ export class Base extends React.Component {
     this.setState(state);
   }
 
-  async start() { }
+  async start() {}
 
   nextStep() {
     this.nextStepFunc();
@@ -31,11 +30,11 @@ export class Base extends React.Component {
   actions() {
     return (
       <Button.Group className="button-group">
-        <Button type="primary" onClick={e => this.nextStep(e)}>
+        <Button type="primary" onClick={(e) => this.nextStep(e)}>
           Next
         </Button>
       </Button.Group>
-    )
+    );
   }
 
   content() {
@@ -44,7 +43,7 @@ export class Base extends React.Component {
         {this.renderList()}
         {this.renderPointer()}
       </>
-    )
+    );
   }
 
   renderSquare(i) {
@@ -54,9 +53,9 @@ export class Base extends React.Component {
   renderList() {
     return (
       <div className="board-row">
-        {this.list.map(x => this.renderSquare(x))}
+        {this.list.map((x) => this.renderSquare(x))}
       </div>
-    )
+    );
   }
 
   renderPointer() {
@@ -64,18 +63,16 @@ export class Base extends React.Component {
   }
 
   renderPointerRow(list) {
-    return <div className="board-row">
-      {list.map(x => this.renderSquare(x))}
-    </div>
+    return (
+      <div className="board-row">{list.map((x) => this.renderSquare(x))}</div>
+    );
   }
 
   render() {
     return (
       <div>
         {this.actions()}
-        <div className="game-board">
-          {this.content()}
-        </div>
+        <div className="game-board">{this.content()}</div>
       </div>
     );
   }
