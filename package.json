@@ -5,6 +5,7 @@
   "dependencies": {
     "antd": "^3.21.2",
     "cytoscape": "^3.23.0",
+    "cytoscape-popper": "^2.0.0",
     "react": "^16.8.6",
     "react-cytoscapejs": "^2.0.0",
     "react-dom": "^16.8.6",

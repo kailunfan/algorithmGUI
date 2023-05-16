@@ -2,6 +2,10 @@ import React, { Fragment } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { Button } from "antd";
 
+import popper from "cytoscape-popper";
+import cytoscape from "cytoscape";
+cytoscape.use(popper);
+
 class LinkNode {
   constructor(id, label, visibility = true) {
     this.id = id;
@@ -9,6 +13,7 @@ class LinkNode {
     this.visibility = visibility;
     this.nextNode = undefined;
     this.classes = [];
+    this.tooltip = "";
   }
   setNext(node) {
     this.nextNode = node;
@@ -19,13 +24,16 @@ class LinkNode {
   }
   setNormal() {
     this.classes = [];
+    this.tooltip = "";
   }
   setCur() {
     this.classes = [...this.classes, "cur-node"];
+    this.tooltip = "cur";
     return this;
   }
   setPrev() {
     this.classes = [...this.classes, "prev-node"];
+    this.tooltip = "prev";
     return this;
   }
   setAns() {
@@ -35,10 +43,12 @@ class LinkNode {
 }
 
 export class LinkReverse extends React.Component {
+  myCyRef = undefined;
+  poppers = [];
   constructor(props) {
     super(props);
 
-    const n0 = new LinkNode("0", `x`, false);
+    const n0 = new LinkNode("0", `null`, false);
     const na = new LinkNode("a", `a`, true);
     const nb = new LinkNode("b", `b`, true);
     const nc = new LinkNode("c", `c`, true);
@@ -64,6 +74,7 @@ export class LinkReverse extends React.Component {
           id: n.id,
           label: n.label,
           visibility: n.visibility ? "visible" : "hidden",
+          tooltip: n.tooltip,
         },
         classes: n.classes,
       });
@@ -90,6 +101,29 @@ export class LinkReverse extends React.Component {
     });
   }
 
+  componentDidUpdate() {
+    for (const p of this.poppers) {
+      p.destroy();
+    }
+    for (const x of this.myCyRef.nodes()) {
+      const p = x.popper({
+        content: () => {
+          let div = document.createElement("div");
+          div.innerHTML = x.data().tooltip;
+          document.body.appendChild(div);
+          return div;
+        },
+        popper: {}, // my popper options here
+      });
+      this.poppers.push(p);
+      let update = () => {
+        p.update();
+      };
+      x.on("position", update);
+      this.myCyRef.on("pan zoom resize", update);
+    }
+  }
+
   *actions() {
     // add sentry
     this.state.nodes[0].visibility = true;
@@ -101,15 +135,12 @@ export class LinkReverse extends React.Component {
     let cur = this.state.nodes[1].setCur();
     this.refresh();
 
-    while (true) {
+    while (cur) {
       yield;
       // move edge
       const nxt = cur.getNext();
       cur.setNext(prv);
       this.refresh();
-      if (!nxt) {
-        break;
-      }
       yield;
       // set prv cur
       prv.setNormal();
@@ -118,12 +149,9 @@ export class LinkReverse extends React.Component {
       this.refresh();
     }
     // set ans
-    cur.setAns();
-    this.setState((state, props) => {
-      return {
-        nodes: state.nodes,
-      };
-    });
+    yield;
+    prv.setAns();
+    this.refresh();
   }
 
   render() {
@@ -139,7 +167,7 @@ export class LinkReverse extends React.Component {
           width: 40,
           height: 40,
           "font-size": 30,
-          "text-valign": "center",
+          "text-valign": "top",
           "text-halign": "center",
         },
       },
@@ -180,14 +208,14 @@ export class LinkReverse extends React.Component {
           <Button type="primary" onClick={(e) => this.run.next()}>
             Next
           </Button>
-          {/* <Button type="primary" onClick={(e) => this.run.next()}>
-            Reset
-          </Button> */}
         </Button.Group>
         <CytoscapeComponent
+          cy={(cy) => {
+            this.myCyRef = cy;
+          }}
           elements={this.elements}
           layout={layout}
-          style={{ height: "600px" }}
+          style={{ height: "300px" }}
           stylesheet={stylesheet}
         />
       </Fragment>
