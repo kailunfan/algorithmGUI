@@ -15,6 +15,9 @@ class LinkNode {
     this.classes = [];
     this.tooltip = "";
   }
+  setVisible(v) {
+    this.visibility = v;
+  }
   setNext(node) {
     this.nextNode = node;
     return node;
@@ -26,23 +29,29 @@ class LinkNode {
     this.classes = [];
     this.tooltip = "";
   }
-  setCur() {
+  setCurFlag() {
     this.classes = [...this.classes, "cur-node"];
-    this.tooltip = "cur";
+    this.tooltip = "Cur";
     return this;
   }
-  setPrev() {
+  setPrevFlag() {
     this.classes = [...this.classes, "prev-node"];
-    this.tooltip = "prev";
+    this.tooltip = "Prev";
     return this;
   }
-  setAns() {
+  setNextFlag() {
+    this.classes = [...this.classes, "next-node"];
+    this.tooltip = "Next";
+    return this;
+  }
+  setAnsFlag() {
     this.classes = [...this.classes, "ans"];
+    this.tooltip = "NewHead";
     return this;
   }
 }
 
-export class LinkReverse extends React.Component {
+export default class LinkReverse extends React.Component {
   myCyRef = undefined;
   poppers = [];
   constructor(props) {
@@ -105,15 +114,19 @@ export class LinkReverse extends React.Component {
     for (const p of this.poppers) {
       p.destroy();
     }
+    document.querySelectorAll(".pop").forEach((x) => x.remove());
     for (const x of this.myCyRef.nodes()) {
       const p = x.popper({
         content: () => {
           let div = document.createElement("div");
+          div.classList.add("pop");
           div.innerHTML = x.data().tooltip;
           document.body.appendChild(div);
           return div;
         },
-        popper: {}, // my popper options here
+        popper: {
+          removeOnDestroy: true,
+        }, // my popper options here
       });
       this.poppers.push(p);
       let update = () => {
@@ -126,31 +139,40 @@ export class LinkReverse extends React.Component {
 
   *actions() {
     // add sentry
-    this.state.nodes[0].visibility = true;
+    this.state.nodes[0].setVisible(true);
     this.refresh();
     yield;
 
     // set pre, cur
-    let prv = this.state.nodes[0].setPrev();
-    let cur = this.state.nodes[1].setCur();
+    let prv = this.state.nodes[0].setPrevFlag();
+    this.refresh();
+    yield;
+    let cur = this.state.nodes[1].setCurFlag();
     this.refresh();
 
     while (cur) {
       yield;
+      this.refresh();
       // move edge
       const nxt = cur.getNext();
+      nxt && nxt.setNextFlag();
+      yield;
+      this.refresh();
+
       cur.setNext(prv);
       this.refresh();
       yield;
       // set prv cur
       prv.setNormal();
-      prv = cur.setPrev();
-      cur = nxt && nxt.setCur();
+      prv = cur.setPrevFlag();
+      this.refresh();
+      yield;
+      cur = nxt && nxt.setCurFlag();
       this.refresh();
     }
     // set ans
     yield;
-    prv.setAns();
+    prv.setAnsFlag();
     this.refresh();
   }
 
@@ -191,6 +213,12 @@ export class LinkReverse extends React.Component {
         selector: ".prev-node",
         style: {
           "background-color": "#f00",
+        },
+      },
+      {
+        selector: ".next-node",
+        style: {
+          "background-color": "#E6A23C",
         },
       },
       {
