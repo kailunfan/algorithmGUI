@@ -1,4 +1,4 @@
-import "antd/dist/antd.css";
+import "antd/dist/reset.css";
 import React from "react";
 import { Menu, Layout } from "antd";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
