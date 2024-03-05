@@ -23,7 +23,7 @@ export class BubbleSort extends React.Component {
   constructor(props) {
     super(props);
     this.initialState = {
-      list: [1, 3, 2, 4, 6, 5],
+      list: [3, 2, 1, 4, 6, 5],
       i: 100,
       j: 100,
       toSwapIndex: [],

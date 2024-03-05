@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, createRef } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { Button } from "antd";
 
@@ -53,6 +53,7 @@ class LinkNode {
 
 export default class LinkReverse extends React.Component {
   myCyRef = undefined;
+  popperRef = createRef();
   poppers = [];
   constructor(props) {
     super(props);
@@ -121,7 +122,7 @@ export default class LinkReverse extends React.Component {
           let div = document.createElement("div");
           div.classList.add("pop");
           div.innerHTML = x.data().tooltip;
-          document.body.appendChild(div);
+          this.popperRef.appendChild(div);
           return div;
         },
         popper: {
@@ -246,6 +247,7 @@ export default class LinkReverse extends React.Component {
           style={{ height: "300px" }}
           stylesheet={stylesheet}
         />
+        <div ref={(x) => (this.popperRef = x)}></div>
       </Fragment>
     );
   }
