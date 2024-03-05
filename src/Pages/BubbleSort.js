@@ -64,16 +64,6 @@ export class BubbleSort extends React.Component {
     this.process = this.start();
   }
 
-  renderPointer() {
-    const shell = Array(this.list.length).fill("");
-    for (const cur of this.state.cur) {
-      if (cur >= 0) {
-        shell[cur] = "↑";
-      }
-    }
-    return this.renderPointerRow(shell);
-  }
-
   render() {
     const items = [];
     for (const [i, value] of Object.entries(this.state.list)) {
