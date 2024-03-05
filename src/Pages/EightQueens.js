@@ -12,12 +12,12 @@ class Board extends React.Component {
       list[value] = "O";
     }
     return (
-      <div className="board-row">{list.map(x => this.renderSquare(x))}</div>
+      <div className="board-row">{list.map((x) => this.renderSquare(x))}</div>
     );
   }
 
   render() {
-    return <div>{this.props.result.map(x => this.renderRow(x))}</div>;
+    return <div>{this.props.result.map((x) => this.renderRow(x))}</div>;
   }
 }
 
@@ -33,7 +33,7 @@ export class EightQueens extends React.Component {
   }
 
   nextResultPromiseFactory() {
-    return new Promise(resolve => (this.nextResultFunc = () => resolve()));
+    return new Promise((resolve) => (this.nextResultFunc = () => resolve()));
   }
 
   nextStepPromiseFactory() {
@@ -62,11 +62,12 @@ export class EightQueens extends React.Component {
         this.nextStepPromise = this.nextStepPromiseFactory();
         this.setState({ result: this.result });
         await this.nextStepPromise;
-
         if (n === this.result.length - 1) {
           // 等待用户交互
           this.nextResultPromise = this.nextResultPromiseFactory();
-          this.state.resultList.unshift(JSON.parse(JSON.stringify(this.result)));
+          this.state.resultList.unshift(
+            JSON.parse(JSON.stringify(this.result))
+          );
           this.setState({ result: this.result });
           await this.nextResultPromise;
         }
@@ -79,7 +80,7 @@ export class EightQueens extends React.Component {
     this.nextStepFunc();
     this.nextStepPromiseFactory = () => {};
     this.nextResultPromiseFactory = () =>
-      new Promise(resolve => (this.nextResultFunc = () => resolve()));
+      new Promise((resolve) => (this.nextResultFunc = () => resolve()));
     this.nextResultFunc();
   }
 
@@ -87,7 +88,7 @@ export class EightQueens extends React.Component {
     this.nextResultFunc();
     this.nextResultPromiseFactory = () => {};
     this.nextStepPromiseFactory = () =>
-      new Promise(resolve => (this.nextStepFunc = () => resolve()));
+      new Promise((resolve) => (this.nextStepFunc = () => resolve()));
     this.nextStepFunc();
   }
 
@@ -99,10 +100,10 @@ export class EightQueens extends React.Component {
     return (
       <div>
         <Button.Group className="button-group">
-          <Button type="primary" onClick={e => this.nextResult(e)}>
+          <Button type="primary" onClick={(e) => this.nextResult(e)}>
             NextResult
           </Button>
-          <Button type="primary" onClick={e => this.nextStep(e)}>
+          <Button type="primary" onClick={(e) => this.nextStep(e)}>
             NextStep
           </Button>
         </Button.Group>
@@ -111,7 +112,7 @@ export class EightQueens extends React.Component {
         </div>
 
         <div className="result-list">
-          {this.state.resultList.map(x => (
+          {this.state.resultList.map((x) => (
             <p>{x}</p>
           ))}
         </div>

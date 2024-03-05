@@ -98,7 +98,7 @@ export class SelectSort extends React.Component {
       <>
         <div>
           <Button.Group className="button-group">
-            <Button type="primary" onClick={(e) => this.reset()}>
+            <Button onClick={(e) => this.reset()}>
               Reset
             </Button>
             <Button
