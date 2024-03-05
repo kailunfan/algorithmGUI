@@ -3,7 +3,8 @@ body {
   margin: 20px;
 }
 
-ol, ul {
+ol,
+ul {
   padding-left: 30px;
 }
 
@@ -49,17 +50,17 @@ ol, ul {
   margin-left: 20px;
 }
 
-.game-board{
+.game-board {
   float: left;
   margin: 50px;
-  margin-top:20px;
+  margin-top: 20px;
 }
-s
-.result-list{
+
+.result-list {
   height: 300px;
   overflow: auto;
 }
-.button-group{
+.button-group {
   margin: 20px;
   margin-left: 0px;
 }

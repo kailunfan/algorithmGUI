@@ -57,7 +57,13 @@ export default class LinkReverse extends React.Component {
   poppers = [];
   constructor(props) {
     super(props);
+    this.state = {
+      nodes: this.initialNodes(),
+    };
+    this.run = this.actions();
+  }
 
+  initialNodes() {
     const n0 = new LinkNode("0", `null`, false);
     const na = new LinkNode("a", `a`, true);
     const nb = new LinkNode("b", `b`, true);
@@ -65,14 +71,7 @@ export default class LinkReverse extends React.Component {
     const nd = new LinkNode("d", `d`, true);
     const ne = new LinkNode("e", `e`, true);
     na.setNext(nb).setNext(nc).setNext(nd).setNext(ne);
-
-    this.nodes = [];
-
-    this.state = {
-      nodes: [n0, na, nb, nc, nd, ne],
-    };
-
-    this.run = this.actions();
+    return [n0, na, nb, nc, nd, ne];
   }
 
   get elements() {
@@ -177,6 +176,11 @@ export default class LinkReverse extends React.Component {
     this.refresh();
   }
 
+  reset() {
+    this.setState({ nodes: this.initialNodes() });
+    this.run = this.actions();
+  }
+
   render() {
     const layout = { name: "grid", rows: 1 };
     const stylesheet = [
@@ -234,6 +238,7 @@ export default class LinkReverse extends React.Component {
     return (
       <Fragment>
         <Button.Group className="button-group">
+          <Button onClick={(e) => this.reset()}>Reset</Button>
           <Button type="primary" onClick={(e) => this.run.next()}>
             Next
           </Button>
@@ -242,6 +247,8 @@ export default class LinkReverse extends React.Component {
           cy={(cy) => {
             this.myCyRef = cy;
           }}
+          zoomingEnabled={false}
+          panningEnabled={false}
           elements={this.elements}
           layout={layout}
           style={{ height: "300px" }}

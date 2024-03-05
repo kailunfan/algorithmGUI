@@ -3,7 +3,12 @@ import { Button } from "antd";
 
 class Board extends React.Component {
   renderSquare(i) {
-    return <button className="square">{i}</button>;
+    if (i !== "") {
+      return (
+        <button className="square" style={{ background: "#67C23A" }}></button>
+      );
+    }
+    return <button className="square"></button>
   }
 
   renderRow(value) {
@@ -65,9 +70,7 @@ export class EightQueens extends React.Component {
         if (n === this.result.length - 1) {
           // 等待用户交互
           this.nextResultPromise = this.nextResultPromiseFactory();
-          this.state.resultList.unshift(
-            JSON.parse(JSON.stringify(this.result))
-          );
+          this.state.resultList.push(JSON.parse(JSON.stringify(this.result)));
           this.setState({ result: this.result });
           await this.nextResultPromise;
         }
@@ -100,20 +103,28 @@ export class EightQueens extends React.Component {
     return (
       <div>
         <Button.Group className="button-group">
-          <Button type="primary" onClick={(e) => this.nextResult(e)}>
-            NextResult
-          </Button>
           <Button type="primary" onClick={(e) => this.nextStep(e)}>
             NextStep
+          </Button>
+          <Button type="primary" onClick={(e) => this.nextResult(e)}>
+            NextResult
           </Button>
         </Button.Group>
         <div className="game-board">
           <Board result={this.state.result} />
         </div>
 
-        <div className="result-list">
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            height: "20em",
+            flexWrap: "wrap",
+            alignContent: "flex-start",
+          }}
+        >
           {this.state.resultList.map((x) => (
-            <p>{x}</p>
+            <div style={{ margin: "0.2em 1em" }}>{x}</div>
           ))}
         </div>
       </div>
