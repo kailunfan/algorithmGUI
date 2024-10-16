@@ -21,7 +21,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "scp -r build/* ubuntu@one:/home/ubuntu/nginx/static/algorithm_gui"
   },
   "eslintConfig": {
     "extends": "react-app"
